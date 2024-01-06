@@ -138,12 +138,31 @@ const ChannelsTable = () => {
                     <div>
                         <InputNumber
                             style={{width: 70}}
-                            name='name'
+                            name='priority'
                             onChange={value => {
                                 manageChannel(record.id, 'priority', record, value);
                             }}
                             defaultValue={record.priority}
                             min={-999}
+                        />
+                    </div>
+                );
+            },
+        },
+        {
+            title: '权重',
+            dataIndex: 'weight',
+            render: (text, record, index) => {
+                return (
+                    <div>
+                        <InputNumber
+                            style={{width: 70}}
+                            name='weight'
+                            onChange={value => {
+                                manageChannel(record.id, 'weight', record, value);
+                            }}
+                            defaultValue={record.weight}
+                            min={0}
                         />
                     </div>
                 );
@@ -449,7 +468,7 @@ const ChannelsTable = () => {
   
 
     const testChannel = async (record) => {
-        const res = await API.get(`/api/channel/test/${record.id}/`, {params: {version: gptVersion}});
+        const res = await API.get(`/api/channel/test/${record.id}/`);
         const {success, message, time} = res.data;
         if (success) {
             let newChannels = [...channels];
@@ -665,7 +684,7 @@ const ChannelsTable = () => {
                             searchChannels(searchKeyword, v)
                             
                         }}/>
-                        <Space>
+                       {/*  <Space>
                             <Typography.Text>测试模型：</Typography.Text>
                             <AutoComplete
                                 placeholder={'选择或输入 GPT 版本'}
@@ -680,6 +699,7 @@ const ChannelsTable = () => {
                                 ]}
                             />
                         </Space>
+                        */}
 
 
                     </Space>

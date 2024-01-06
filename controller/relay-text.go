@@ -299,7 +299,7 @@ func relayTextHelper(c *gin.Context, relayMode int) *OpenAIErrorWithStatusCode {
 				preConsumedQuota = int(float64(preConsumedTokens) * ratio)
 			} else {
 				ratio = modelRatio2 * groupRatio
-				preConsumedQuota = int(ratio * 1 * 500000)
+				preConsumedQuota = int(ratio * common.QuotaPerUnit)
 			}
 		} else {
 			preConsumedQuota = int(float64(preConsumedTokens) * ratio)
@@ -310,7 +310,7 @@ func relayTextHelper(c *gin.Context, relayMode int) *OpenAIErrorWithStatusCode {
 			preConsumedQuota = int(float64(preConsumedTokens) * ratio)
 		} else {
 			ratio = modelRatio2 * groupRatio
-			preConsumedQuota = int(ratio * 1 * 500000)
+			preConsumedQuota = int(ratio * common.QuotaPerUnit)
 		}
 	} else {
 		preConsumedQuota = int(float64(preConsumedTokens) * ratio)
@@ -502,7 +502,7 @@ func relayTextHelper(c *gin.Context, relayMode int) *OpenAIErrorWithStatusCode {
 		case APITypeOpenAI:
 			if channelType == common.ChannelTypeAzure {
 				req.Header.Set("api-key", apiKey)
-			} else if channelType == common.ChannelTypeOpenAI && apiKey != "" {
+			} else if apiKey != "" {
 				req.Header.Set("Authorization", "Bearer "+apiKey)
 			}
 		case APITypeChatBot:
@@ -600,7 +600,7 @@ func relayTextHelper(c *gin.Context, relayMode int) *OpenAIErrorWithStatusCode {
 					} else {
 						groupRatio := common.GetGroupRatio(group)
 						ratio = modelRatio2 * groupRatio
-						quota = int(ratio * 1 * 500000)
+						quota = int(ratio * common.QuotaPerUnit)
 						modelRatioString = fmt.Sprintf("按次计费")
 					}
 				} else {
@@ -615,7 +615,7 @@ func relayTextHelper(c *gin.Context, relayMode int) *OpenAIErrorWithStatusCode {
 				} else {
 					groupRatio := common.GetGroupRatio(group)
 					ratio = modelRatio2 * groupRatio
-					quota = int(ratio * 1 * 500000)
+					quota = int(ratio * common.QuotaPerUnit)
 					modelRatioString = fmt.Sprintf("按次计费")
 				}
 			} else {

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 	"one-api/common"
 	"one-api/model"
@@ -85,11 +86,13 @@ func RootAuth() func(c *gin.Context) {
 
 func TokenAuth() func(c *gin.Context) {
 	return func(c *gin.Context) {
+		isMidJourneyKey := false
 		key := c.Request.Header.Get("Authorization")
 		parts := make([]string, 0)
 		key = strings.TrimPrefix(key, "Bearer ")
 		if key == "" || key == "midjourney-proxy" {
 			key = c.Request.Header.Get("mj-api-secret")
+			isMidJourneyKey = true
 			key = strings.TrimPrefix(key, "Bearer ")
 			key = strings.TrimPrefix(key, "sk-")
 			parts = strings.Split(key, "-")
@@ -99,7 +102,17 @@ func TokenAuth() func(c *gin.Context) {
 			parts = strings.Split(key, "-")
 			key = parts[0]
 		}
-		token, err := model.ValidateUserToken(key)
+		var modelRequest ModelRequest
+		if !isMidJourneyKey {
+			if err := common.UnmarshalBodyReusable(c, &modelRequest); err != nil {
+				log.Printf("解析请求体时发生错误：%v", err)
+				abortWithMessage(c, http.StatusBadRequest, "请求体解析失败，请确保提交了有效的JSON")
+				return
+			}
+		} else {
+			modelRequest.Model = "midjourney"
+		}
+		token, err := model.ValidateUserToken(key, modelRequest.Model)
 		if err != nil {
 			abortWithMessage(c, http.StatusUnauthorized, err.Error())
 			return
@@ -117,6 +130,7 @@ func TokenAuth() func(c *gin.Context) {
 		c.Set("token_id", token.Id)
 		c.Set("token_name", token.Name)
 		c.Set("group", token.Group)
+		c.Set("model", modelRequest.Model)
 		requestURL := c.Request.URL.String()
 		consumeQuota := true
 		if strings.HasPrefix(requestURL, "/v1/models") {

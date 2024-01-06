@@ -14,7 +14,6 @@ import (
 // 1 === $0.002 / 1K tokens
 // 1 === ￥0.014 / 1k tokens
 var ModelRatio = map[string]float64{
-	"midjourney":                75,
 	"gpt-4-gizmo-*":             15,
 	"gpt-4-all":                 15,
 	"gpt-4":                     15,
@@ -34,6 +33,8 @@ var ModelRatio = map[string]float64{
 	"gpt-3.5-turbo-16k-0613":    1.5,
 	"gpt-3.5-turbo-instruct":    0.75, // $0.0015 / 1K tokens
 	"gpt-3.5-turbo-1106":        0.5,  // $0.001 / 1K tokens
+	"babbage-002":               0.2,  // $0.0004 / 1K tokens
+	"davinci-002":               1,    // $0.002 / 1K tokens
 	"text-ada-001":              0.2,
 	"text-babbage-001":          0.25,
 	"text-curie-001":            1,
@@ -80,7 +81,16 @@ var ModelRatio = map[string]float64{
 	"hunyuan":                   7.143,  // ¥0.1 / 1k tokens  // https://cloud.tencent.com/document/product/1729/97731#e0e6be58-60c8-469f-bdeb-6c264ce3b4d0
 }
 
-var ModelRatio2 = map[string]float64{}
+var ModelPrice = map[string]float64{
+	"gpt-4-gizmo-*": 0.1,
+	"mj_imagine":    0.1,
+	"mj_variation":  0.1,
+	"mj_reroll":     0.1,
+	"mj_blend":      0.1,
+	"mj_describe":   0.05,
+	"mj_upscale":    0.05,
+	"midjourney":    0.1,
+}
 
 func ModelRatioJSONString() string {
 	jsonBytes, err := json.Marshal(ModelRatio)
@@ -96,7 +106,7 @@ func UpdateModelRatioByJSONString(jsonStr string) error {
 }
 
 func ModelRatio2JSONString() string {
-	jsonBytes, err := json.Marshal(ModelRatio2)
+	jsonBytes, err := json.Marshal(ModelPrice)
 	if err != nil {
 		SysError("error marshalling model ratio: " + err.Error())
 	}
@@ -104,8 +114,8 @@ func ModelRatio2JSONString() string {
 }
 
 func UpdateModelRatio2ByJSONString(jsonStr string) error {
-	ModelRatio2 = make(map[string]float64)
-	return json.Unmarshal([]byte(jsonStr), &ModelRatio2)
+	ModelPrice = make(map[string]float64)
+	return json.Unmarshal([]byte(jsonStr), &ModelPrice)
 }
 
 func GetModelRatio(name string) float64 {
@@ -124,9 +134,9 @@ func GetModelRatio2(name string) (float64, bool) {
 	if strings.HasPrefix(name, "gpt-4-gizmo") {
 		name = "gpt-4-gizmo-*"
 	}
-	ratio, ok := ModelRatio2[name]
+	ratio, ok := ModelPrice[name]
 	if !ok {
-		ratio, ok = ModelRatio2["default"] // 尝试获取默认
+		ratio, ok = ModelPrice["default"] // 尝试获取默认
 	}
 	return ratio, ok
 }

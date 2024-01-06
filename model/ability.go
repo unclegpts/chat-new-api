@@ -16,12 +16,13 @@ type Ability struct {
 	ChannelId int    `json:"channel_id" gorm:"primaryKey;autoIncrement:false;index"`
 	Enabled   bool   `json:"enabled"`
 	Priority  *int64 `json:"priority" gorm:"bigint;default:0;index"`
+	Weight    uint   `json:"weight" gorm:"default:0;index"`
 }
 
 type ModelBillingInfo struct {
 	Model           string  `json:"model"`
 	ModelRatio      float64 `json:"model_ratio"`      // ModelRatio中的值
-	ModelRatio2     float64 `json:"model_ratio_2"`    // ModelRatio2中的值（如果有的话）
+	ModelPrice      float64 `json:"model_ratio_2"`    // ModelPrice中的值（如果有的话）
 	CalculatedRatio float64 `json:"calculated_ratio"` // 计算后的比率
 }
 
@@ -51,18 +52,18 @@ func GetGroupModelsBilling(group string) ([]ModelBillingInfo, error) {
 		return nil, err
 	}
 
-	// 查询options表获取ModelRatio和ModelRatio2的值
+	// 查询options表获取ModelRatio和ModelPrice的值
 	var options []struct {
 		Key   string
 		Value string
 	}
 
-	err = DB.Table("options").Where("`key` IN (?)", []string{"ModelRatio", "ModelRatio2"}).Find(&options).Error
+	err = DB.Table("options").Where("`key` IN (?)", []string{"ModelRatio", "ModelPrice"}).Find(&options).Error
 	if err != nil {
 		return nil, err
 	}
 
-	// 解析ModelRatio 和 ModelRatio2 的值
+	// 解析ModelRatio 和 ModelPrice 的值
 	modelRatio := make(ModelRatios)
 	if len(modelRatio) == 0 {
 		jsonStr := common.OptionMap["ModelRatio"]
@@ -74,8 +75,8 @@ func GetGroupModelsBilling(group string) ([]ModelBillingInfo, error) {
 			return nil, fmt.Errorf("error unmarshalling ModelRatio from common: %v", err)
 		}
 	}
-	modelRatio2 := make(ModelRatios)
-	var defaultModelRatio2 float64
+	ModelPrice := make(ModelRatios)
+	var defaultModelPrice float64
 	var hasDefault bool
 
 	for _, option := range options {
@@ -86,11 +87,11 @@ func GetGroupModelsBilling(group string) ([]ModelBillingInfo, error) {
 		}
 		if option.Key == "ModelRatio" {
 			modelRatio = ratios
-		} else if option.Key == "ModelRatio2" {
-			modelRatio2 = ratios
-			// 尝试获取ModelRatio2的默认值
+		} else if option.Key == "ModelPrice" {
+			ModelPrice = ratios
+			// 尝试获取ModelPrice的默认值
 			if defaultRatio, ok := ratios["default"]; ok {
-				defaultModelRatio2 = defaultRatio
+				defaultModelPrice = defaultRatio
 				hasDefault = true
 			}
 		}
@@ -127,22 +128,24 @@ func GetGroupModelsBilling(group string) ([]ModelBillingInfo, error) {
 	for _, model := range models {
 		var modelInfo ModelBillingInfo
 
-		// 查找ModelRatio和ModelRatio2的值
-		if ratio, exists := modelRatio[model]; exists {
-			modelInfo.ModelRatio = ratio * groupRatioValue
-		} else {
-			// 如果ModelRatio不存在，使用默认值30
-			modelInfo.ModelRatio = 30 * groupRatioValue
+		// 查找ModelRatio和ModelPrice的值
+		if model != "midjourney" {
+			if ratio, exists := modelRatio[model]; exists {
+				modelInfo.ModelRatio = ratio * groupRatioValue
+			} else {
+				// 如果ModelRatio不存在，使用默认值15
+				modelInfo.ModelRatio = 15 * groupRatioValue
+			}
 		}
 
-		if ratio, exists := modelRatio2[model]; exists {
-			modelInfo.ModelRatio2 = ratio * groupRatioValue
+		if ratio, exists := ModelPrice[model]; exists {
+			modelInfo.ModelPrice = ratio * groupRatioValue
 		} else if hasDefault {
-			// 如果ModelRatio2不存在但有默认值，则使用此默认值
-			modelInfo.ModelRatio2 = defaultModelRatio2 * groupRatioValue
+			// 如果ModelPrice不存在但有默认值，则使用此默认值
+			modelInfo.ModelPrice = defaultModelPrice * groupRatioValue
 		} else {
-			// 如果ModelRatio2不存在并且没有默认值，则设置为0
-			modelInfo.ModelRatio2 = 0
+			// 如果ModelPrice不存在并且没有默认值，则设置为0
+			modelInfo.ModelPrice = 0
 		}
 
 		modelInfo.Model = model
@@ -154,7 +157,7 @@ func GetGroupModelsBilling(group string) ([]ModelBillingInfo, error) {
 }
 
 func GetRandomSatisfiedChannel(group string, model string) (*Channel, error) {
-	ability := Ability{}
+	var abilities []Ability
 	groupCol := "`group`"
 	trueVal := "1"
 	if common.UsingPostgreSQL {
@@ -166,16 +169,39 @@ func GetRandomSatisfiedChannel(group string, model string) (*Channel, error) {
 	maxPrioritySubQuery := DB.Model(&Ability{}).Select("MAX(priority)").Where(groupCol+" = ? and model = ? and enabled = "+trueVal, group, model)
 	channelQuery := DB.Where(groupCol+" = ? and model = ? and enabled = "+trueVal+" and priority = (?)", group, model, maxPrioritySubQuery)
 	if common.UsingSQLite || common.UsingPostgreSQL {
-		err = channelQuery.Order("RANDOM()").First(&ability).Error
+		err = channelQuery.Order("weight DESC").Find(&abilities).Error
 	} else {
-		err = channelQuery.Order("RAND()").First(&ability).Error
+		err = channelQuery.Order("weight DESC").Find(&abilities).Error
 	}
 	if err != nil {
 		return nil, err
 	}
 	channel := Channel{}
-	channel.Id = ability.ChannelId
-	err = DB.First(&channel, "id = ?", ability.ChannelId).Error
+	if len(abilities) > 0 {
+		// Randomly choose one
+		weightSum := uint(0)
+		for _, ability_ := range abilities {
+			weightSum += ability_.Weight
+		}
+		if weightSum == 0 {
+			// All weight is 0, randomly choose one
+			channel.Id = abilities[common.GetRandomInt(len(abilities))].ChannelId
+		} else {
+			// Randomly choose one
+			weight := common.GetRandomInt(int(weightSum))
+			for _, ability_ := range abilities {
+				weight -= int(ability_.Weight)
+				//log.Printf("weight: %d, ability weight: %d", weight, *ability_.Weight)
+				if weight <= 0 {
+					channel.Id = ability_.ChannelId
+					break
+				}
+			}
+		}
+	} else {
+		return nil, nil
+	}
+	err = DB.First(&channel, "id = ?", channel.Id).Error
 	return &channel, err
 }
 
@@ -191,6 +217,7 @@ func (channel *Channel) AddAbilities() error {
 				ChannelId: channel.Id,
 				Enabled:   channel.Status == common.ChannelStatusEnabled,
 				Priority:  channel.Priority,
+				Weight:    uint(channel.GetWeight()),
 			}
 			abilities = append(abilities, ability)
 		}
