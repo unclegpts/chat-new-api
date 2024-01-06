@@ -150,20 +150,20 @@ const ProfileSection = () => {
                       <ListItemIcon>
                         <IconUserScan stroke={1.5} size="1.3rem" />
                       </ListItemIcon>
-                      <ListItemText primary={<Typography variant="body2">设置</Typography>} />
+                      <ListItemText primary={<Typography variant="body2">帐户设置</Typography>} />
                     </ListItemButton>
                     <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} onClick={() => navigate('/about')}>
                       <ListItemIcon>
                         <IconInfoCircle stroke={1.5} size="1.3rem" />
                       </ListItemIcon>
-                      <ListItemText primary={<Typography variant="body2">关于</Typography>} />
+                      <ListItemText primary={<Typography variant="body2">帮助中心</Typography>} />
                     </ListItemButton>
 
                     <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} onClick={handleLogout}>
                       <ListItemIcon>
                         <IconLogout stroke={1.5} size="1.3rem" />
                       </ListItemIcon>
-                      <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                      <ListItemText primary={<Typography variant="body2">退出帐户</Typography>} />
                     </ListItemButton>
                   </List>
                 </MainCard>

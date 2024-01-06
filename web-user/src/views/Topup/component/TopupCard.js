@@ -218,7 +218,7 @@ const TopupCard = () => {
               setRedemptionCode(e.target.value);
             }}
             name="key"
-            placeholder="请输入兑换码"
+            placeholder="此处输入您获取到的兑换码"
             endAdornment={
               <InputAdornment position="end">
                 <Button variant="contained" onClick={topUp} disabled={isSubmitting}>
@@ -244,7 +244,7 @@ const TopupCard = () => {
        
         <SubCard sx={{ marginTop: '40px' }}>
           <Typography variant="h3" color={theme.palette.grey[700]} sx={{ marginBottom: '20px' }}>
-            在线充值
+            帐户在线充值
           </Typography>
 
           <FormControl fullWidth variant="outlined" sx={{ mt: 2, mb: 1 }}>
@@ -259,7 +259,7 @@ const TopupCard = () => {
                 setTopUpCount(newTopUpCount); 
                 getAmount(newTopUpCount); 
               }}
-              startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              startAdornment={<InputAdornment position="start">¥</InputAdornment>}
               // 根据isMobile状态，决定endAdornment的内容
               endAdornment={!isMobile ? (
                   <InputAdornment position="end">
@@ -317,8 +317,8 @@ const TopupCard = () => {
           <Typography variant="h6" component="h2">
             确定要充值吗
           </Typography>
-          <Typography sx={{ mt: 2 }}>充值金额：{topUpCount}$</Typography>
-          <Typography sx={{ mt: 2 }}>实付金额：{renderAmount()}</Typography>
+          <Typography sx={{ mt: 2 }}>充值金额：{topUpCount} PA币</Typography>
+          <Typography sx={{ mt: 2 }}>实付金额：¥ {renderAmount()}</Typography>
           <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ mt: 3 }}>
             <Button onClick={() => setOpen(false)} color="error">取消</Button>
             <Button onClick={() => onlineTopUp()} variant="contained" disabled={isSubmitting}>

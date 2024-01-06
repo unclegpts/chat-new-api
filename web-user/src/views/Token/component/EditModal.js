@@ -292,7 +292,7 @@ const EditModal = ({ open, tokenId, onCancel, onOk }) => {
                     }}
                   >
                     <MenuItem value={'false'}>按Token计费</MenuItem>
-                    <MenuItem value={'true'}>按次计费</MenuItem>
+                    <MenuItem value={'true'}>按次数计费</MenuItem>
                   </Select>
                   {touched.billing_enabled && errors.billing_enabled && (
                     <FormHelperText error id="helper-text-billing-enabled">

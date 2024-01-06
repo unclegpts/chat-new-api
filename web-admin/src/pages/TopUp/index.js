@@ -218,8 +218,8 @@ const TopUp = () => {
                         size={'small'}
                         centered={true}
                     >
-                        <p>充值金额：{topUpCount}$</p>
-                        <p>实付金额：{renderAmount()}</p>
+                        <p>充值金额：{topUpCount} PA币</p>
+                        <p>实付金额：¥ {renderAmount()}</p>
                         <p>是否确认充值？</p>
                     </Modal>
                     <div style={{marginTop: 20, display: 'flex', justifyContent: 'center'}}>
@@ -229,7 +229,7 @@ const TopUp = () => {
                             <Title level={3} style={{textAlign: 'center'}}>余额 {renderQuota(userQuota)}</Title>
                             <div style={{marginTop: 20}}>
                                 <Divider>
-                                    兑换余额
+                                    兑换帐户余额
                                 </Divider>
                                 <Form>
                                     <Form.Input
@@ -258,7 +258,7 @@ const TopUp = () => {
                             </div>
                             <div style={{marginTop: 20}}>
                                 <Divider>
-                                    在线充值
+                                    在线帐户充值
                                 </Divider>
                                 <Form>
                                     <Form.Input

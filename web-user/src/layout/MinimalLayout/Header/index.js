@@ -36,7 +36,7 @@ const Header = () => {
           首页
         </Button>
         <Button component={Link} variant="text" to="/about" color={pathname === '/about' ? 'primary' : 'inherit'}>
-          关于
+          帮助中心
         </Button>
         {account.user ? (
           <Button component={Link} variant="contained" to="/login" color="primary">

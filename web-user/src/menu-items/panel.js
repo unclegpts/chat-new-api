@@ -22,7 +22,7 @@ const panel = {
   children: [
     {
       id: 'dashboard',
-      title: 'Dashboard',
+      title: '数据总览',
       type: 'item',
       url: '/dashboard',
       icon: icons.IconDashboard,
@@ -31,7 +31,7 @@ const panel = {
     },
     {
       id: 'token',
-      title: 'Token',
+      title: '令牌管理',
       type: 'item',
       url: '/token',
       icon: icons.IconKey,
@@ -39,7 +39,7 @@ const panel = {
     },
     {
       id: 'log',
-      title: '日志',
+      title: '查看日志',
       type: 'item',
       url: '/log',
       icon: icons.IconArticle,
@@ -55,7 +55,7 @@ const panel = {
     //},
     {
       id: 'topup',
-      title: '充值',
+      title: '充值中心',
       type: 'item',
       url: '/topup',
       icon: icons.IconGardenCart,

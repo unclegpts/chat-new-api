@@ -260,17 +260,17 @@ export default function Token() {
           }}
           startIcon={<IconPlus />}
         >
-          新建Token
+          新增Token Key
         </Button>
       </Stack>
       <Stack mb={5}>
         <Alert severity="info">
-          将OpenAI API基础地址https://api.openai.com替换为<b>{siteInfo.server_address}</b>，复制下面的密钥即可使用。
+          提醒：将OpenAI API接口地址https://api.openai.com替换为<b>{siteInfo.server_address}</b>，并复制您在下面所生成的密钥即可使用。
         </Alert>
       </Stack>
       <Card>
         <Box component="form" onSubmit={searchTokens} noValidate>
-          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} placeholder={'搜索令牌的名称...'} />
+          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} placeholder={'此处输入您要搜索的令牌名称...'} />
         </Box>
         <Toolbar
           sx={{

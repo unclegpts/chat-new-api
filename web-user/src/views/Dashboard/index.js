@@ -63,7 +63,7 @@ const Dashboard = () => {
           <Grid item lg={4} xs={12}>
             <StatisticalLineChartCard
               isLoading={isLoading}
-              title="今日请求量"
+              title="今日请求总量"
               chartData={requestChart?.chartData}
               todayValue={requestChart?.todayValue}
             />
@@ -71,7 +71,7 @@ const Dashboard = () => {
           <Grid item lg={4} xs={12}>
             <StatisticalLineChartCard
               isLoading={isLoading}
-              title="今日消费"
+              title="今日消费额度"
               chartData={quotaChart?.chartData}
               todayValue={quotaChart?.todayValue}
             />
@@ -79,7 +79,7 @@ const Dashboard = () => {
           <Grid item lg={4} xs={12}>
             <StatisticalLineChartCard
               isLoading={isLoading}
-              title="今日Token"
+              title="今日Token总量"
               chartData={tokenChart?.chartData}
               todayValue={tokenChart?.todayValue}
             />
@@ -95,16 +95,16 @@ const Dashboard = () => {
             <UserCard>
               <Grid container spacing={gridSpacing} justifyContent="center" alignItems="center" paddingTop={'20px'}>
                 <Grid item xs={4}>
-                  <Typography variant="h4">余 额:</Typography>
+                  <Typography variant="h4">帐户余额:</Typography>
                 </Grid>
                 <Grid item xs={8}>
-                  <Typography variant="h3"> {users?.quota ? '$' + calculateQuota(users.quota) : '未知'}</Typography>
+                  <Typography variant="h3"> {users?.quota ? '¥' + calculateQuota(users.quota) : '未知'}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography variant="h4">已使用:</Typography>
+                  <Typography variant="h4">已用额度:</Typography>
                 </Grid>
                 <Grid item xs={8}>
-                  <Typography variant="h3"> {users?.used_quota ? '$' + calculateQuota(users.used_quota) : '未知'}</Typography>
+                  <Typography variant="h3"> {users?.used_quota ? '¥' + calculateQuota(users.used_quota) : '未知'}</Typography>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography variant="h4">调用次数:</Typography>
@@ -215,8 +215,8 @@ function getLineCardOption(lineDataGroup, field) {
       todayValue = renderNumber(todayValue);
       break;
     case 'Quota':
-      chartData = generateChartOptions(lineData, '美元');
-      todayValue = '$' + renderNumber(todayValue);
+      chartData = generateChartOptions(lineData, '元');
+      todayValue = '¥' + renderNumber(todayValue);
       break;
     case 'PromptTokens':
       chartData = generateChartOptions(lineData, '');
