@@ -24,7 +24,8 @@
 8. 支持渠道自启时间设置
 9. 支持自定义渠道测试模型
 10. 管理员日志增加详细（接收与回复内容）
-11. 支持自定义**SEO**
+11. 支持自定义**网站描述**
+12. 支持数据面板统计
 
 ## 部署
 
@@ -116,13 +117,6 @@ docker run --name chat-api -d --restart always -p 3000:3000 -e SQL_DSN="root:123
     - `DATA_GYM_CACHE_DIR`：目前该配置作用与 `TIKTOKEN_CACHE_DIR` 一致，但是优先级没有它高。
 15. `RELAY_TIMEOUT`：中继超时设置，单位为秒，默认不设置超时时间。
 16. `SQLITE_BUSY_TIMEOUT`：SQLite 锁等待超时设置，单位为毫秒，默认 `3000`。
-17. `DYNAMIC_USER_INDEX_PATH`：设置SEO映射路径，容器内的路径
-
-SEO配置：
-
-```shell
--e DYNAMIC_USER_INDEX_PATH=/data/chat-api/index.html -v /data/chat-api/index.html:/data/chat-api/index.html
-```
 
 ## 界面截图
 
@@ -131,6 +125,8 @@ SEO配置：
 ![image](https://github.com/ai365vip/chat-api/assets/154959065/327c6919-5fe6-4219-855d-1c09498ee567)
 
 ![image](https://github.com/ai365vip/chat-api/assets/154959065/0017e8cb-645b-4c05-aefa-6cd538989278)
+
+![image](https://github.com/ai365vip/chat-api/assets/154959065/e40cf5fd-0cd3-4065-8c81-b88275ecd8d0)
 
 ![image](https://github.com/ai365vip/chat-api/assets/154959065/8c4ea0cd-c4fb-4074-8080-4998b0fcda20)
 ![image](https://github.com/ai365vip/chat-api/assets/154959065/ecdbd755-fc08-4ee4-a08c-fc179fca51f7)

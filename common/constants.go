@@ -12,6 +12,7 @@ import (
 var StartTime = time.Now().Unix() // unit: second
 var Version = "v0.0.0"            // this hard coding will be replaced automatically when building, no need to manually change
 var SystemName = "Chat API"
+var SystemText = ""
 var ServerAddress = "http://localhost:3000"
 var PayAddress = ""
 var EpayId = ""
@@ -30,6 +31,9 @@ var ModelRatioEnabled = true
 var BillingByRequestEnabled = true
 var Wx = true
 var Zfb = true
+var DrawingEnabled = true
+var DataExportEnabled = true
+var DataExportInterval = 5 // unit: minute
 
 // Any options with "Secret", "Token" in its key won't be return by GetOptions
 

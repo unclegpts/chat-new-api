@@ -3,12 +3,17 @@ import { Button, Divider, Form, Grid, Header, Message, Modal } from 'semantic-ui
 import { API, showError, showSuccess } from '../helpers';
 import { marked } from 'marked';
 
+
+const defaultSystemText = `OpenAI 接口聚合管理，我们致力于提供优质的API接入服务，让您可以轻松集成先进的AI模型至您的产品和服务。`;
+
+
 const OtherSetting = () => {
   let [inputs, setInputs] = useState({
     Footer: '',
     Notice: '',
     About: '',
     SystemName: '',
+    SystemText: defaultSystemText,
     Logo: '',
     HomePageContent: ''
   });
@@ -36,6 +41,7 @@ const OtherSetting = () => {
   };
 
   useEffect(() => {
+    
     getOptions().then();
   }, []);
 
@@ -68,6 +74,10 @@ const OtherSetting = () => {
 
   const submitSystemName = async () => {
     await updateOption('SystemName', inputs.SystemName);
+  };
+
+  const submitSystemText = async () => {
+    await updateOption('SystemText', inputs.SystemText);
   };
 
   const submitLogo = async () => {
@@ -132,6 +142,16 @@ const OtherSetting = () => {
             />
           </Form.Group>
           <Form.Button onClick={submitSystemName}>设置系统名称</Form.Button>
+          <Form.Group widths='equal'>
+            <Form.Input
+              label='系统描述'
+              placeholder='系统描述内容'
+              value={inputs.SystemText}
+              name='SystemText'
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+          <Form.Button onClick={submitSystemText}>设置系统描述</Form.Button>
           <Form.Group widths='equal'>
             <Form.Input
               label='Logo 图片地址'

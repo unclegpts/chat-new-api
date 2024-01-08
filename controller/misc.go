@@ -21,6 +21,7 @@ func GetStatus(c *gin.Context) {
 			"github_oauth":        common.GitHubOAuthEnabled,
 			"github_client_id":    common.GitHubClientId,
 			"system_name":         common.SystemName,
+			"system_text":         common.SystemText,
 			"logo":                common.Logo,
 			"footer_html":         common.Footer,
 			"wechat_qrcode":       common.WeChatAccountQRCodeImageURL,
@@ -34,6 +35,8 @@ func GetStatus(c *gin.Context) {
 			"quota_per_unit":      common.QuotaPerUnit,
 			"display_in_currency": common.DisplayInCurrencyEnabled,
 			"enable_batch_update": common.BatchUpdateEnabled,
+			"enable_drawing":      common.DrawingEnabled,
+			"enable_data_export":  common.DataExportEnabled,
 		},
 	})
 	return
