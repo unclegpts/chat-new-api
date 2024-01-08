@@ -215,9 +215,9 @@ export default function Profile() {
             </SubCard>
             <SubCard title="">
             <Stack direction="row" alignItems="center" justifyContent="flex-start" mb={2} spacing={2}>
-              <Typography variant="h2">模型</Typography>
+              <Typography variant="h2">模型类型</Typography>
               <Button variant="contained" onClick={goModel}>
-                计费
+                模型定价
               </Button>
             </Stack>
 

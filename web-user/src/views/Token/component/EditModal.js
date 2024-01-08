@@ -204,7 +204,7 @@ const EditModal = ({ open, tokenId, onCancel, onOk }) => {
       </DialogTitle>
       <Divider />
       <DialogContent>
-        <Alert severity="info">注意，令牌的额度仅用于限制令牌本身的最大额度使用量，实际的使用受到账户的剩余额度限制。</Alert>
+        <Alert severity="info">提醒：此令牌额度仅用于限制令牌本身的最大使用额度，您输入的可用额度将以账户的真实剩余额度为准。</Alert>
         <Formik initialValues={inputs} enableReinitialize validationSchema={validationSchema} onSubmit={submit}>
           
           {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setFieldError, setFieldValue, isSubmitting }) => (
@@ -340,7 +340,7 @@ const EditModal = ({ open, tokenId, onCancel, onOk }) => {
               {tokenId ? null : (
               modelRatioEnabled && billingByRequestEnabled && (
               <FormControl fullWidth error={Boolean(touched.billing_enabled && errors.billing_enabled)} sx={{ ...theme.typography.otherInput }}>
-                  <InputLabel id="billing-enabled-label">计费方式</InputLabel>
+                  <InputLabel id="billing-enabled-label">消费模式</InputLabel>
                   <Select
                     labelId="billing-enabled-label"
                     id="billing-enabled-select"

@@ -399,7 +399,7 @@ func RelayMidjourney(c *gin.Context) {
 func RelayNotImplemented(c *gin.Context) {
 	err := OpenAIError{
 		Message: "API not implemented",
-		Type:    "new_api_error",
+		Type:    "PartnerAI_API_error",
 		Param:   "",
 		Code:    "api_not_implemented",
 	}

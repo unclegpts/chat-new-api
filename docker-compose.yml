@@ -13,7 +13,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - REDIS_CONN_STRING=redis://default:123@localhost:6379
-      - SQL_DSN=partnerai-api:zZPRDwnidSaefdDT@tcp(103.119.2.154:3306)/partnerai-api
+      - SQL_DSN=partnerai-api:zZPRDwnidSaefdDT@tcp(38.6.221.23:3306)/partnerai-api
       - SESSION_SECRET=Wwww1314  # 修改为随机字符串
       - SYNC_FREQUENCY=60
       - CHANNEL_TEST_FREQUENCY=1440
